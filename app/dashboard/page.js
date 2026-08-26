@@ -18,6 +18,7 @@ import { DashboardNavigation } from "@/components/dashboard/dashboard-navigation
 import { FinancialView } from "@/components/dashboard/financial-view";
 import { LeadModal } from "@/components/dashboard/lead-modal";
 import { LeadsView } from "@/components/dashboard/leads-view";
+import { NewLeadToast } from "@/components/dashboard/new-lead-toast";
 import { NotificationCenter } from "@/components/dashboard/notification-center";
 import { useAuthUser } from "@/hooks/use-auth-user";
 import { useLeads } from "@/hooks/use-leads";
@@ -28,7 +29,14 @@ import { getLeadMetrics, parseCurrencyToCents } from "@/lib/crm";
 export default function DashboardPage() {
   const router = useRouter();
   const { user, authLoading } = useAuthUser();
-  const { leads, loading, error, setError } = useLeads(user?.uid);
+  const {
+    leads,
+    loading,
+    error,
+    setError,
+    newLeadToast,
+    dismissNewLeadToast,
+  } = useLeads(user?.uid);
   const { notifications, dismissNotification, clearNotifications } =
     useTaskNotifications(leads);
   const [activeTab, setActiveTab] = useState("leads");
@@ -254,6 +262,8 @@ export default function DashboardPage() {
           saving={isSaving}
         />
       ) : null}
+
+      <NewLeadToast onDismiss={dismissNewLeadToast} toast={newLeadToast} />
     </main>
   );
 }
